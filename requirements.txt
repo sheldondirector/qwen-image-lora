@@ -1,0 +1,6 @@
+git+https://github.com/huggingface/diffusers
+transformers
+accelerate
+huggingface_hub
+safetensors
+requests

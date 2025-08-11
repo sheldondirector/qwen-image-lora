@@ -1,0 +1,16 @@
+# Build a GPU image and install deps
+build:
+  gpu: true            # use Nvidia CUDA base image
+  python_version: "3.10"
+  system_packages:
+    - "git"            # needed for git+ installs
+  python_requirements: requirements.txt
+  # Ensure GPU PyTorch wheels are installed
+  run:
+    - pip install --upgrade --extra-index-url https://download.pytorch.org/whl/cu121 torch torchvision
+
+# Name of the image to push to Replicate's registry (r8.im)
+image: "r8.im/sheldondirector/qwen-image-lora"
+
+# Where Cog finds your predictor
+predict: "predict.py:Predictor"
