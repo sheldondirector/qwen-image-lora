@@ -1,15 +1,31 @@
 name: Push to Replicate
 
 on:
-  workflow_dispatch: {}
+  push:
+    branches: [ main ]
+    paths:
+      - "cog.yaml"
+      - "predict.py"
+      - "requirements.txt"
+      - ".github/workflows/push.yml"
+  workflow_dispatch:
+    inputs:
+      image:
+        description: "Optional: r8.im/<owner>/<model> (overrides cog.yaml image)"
+        required: false
+        default: ""
+
+concurrency:
+  group: push-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   push:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Free disk space (optional but helpful)
-        uses: jlumbroso/free-disk-space@v1.3.1
+      # Optional: free some space so builds don't run out of disk
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@main
         with:
           tool-cache: false
           docker-images: false
@@ -20,7 +36,16 @@ jobs:
       - name: Setup Cog
         uses: replicate/setup-cog@v2
         with:
+          # Create this secret in your repo settings (see steps below)
           token: ${{ secrets.REPLICATE_CLI_AUTH_TOKEN }}
 
       - name: Push model to Replicate
-        run: cog push r8.im/sheldondirector/qwen-image-lora
+        run: |
+          set -euxo pipefail
+          IMAGE_INPUT="${{ github.event.inputs.image }}"
+          if [ -n "$IMAGE_INPUT" ]; then
+            cog push "$IMAGE_INPUT"
+          else
+            # uses the `image:` field from cog.yaml
+            cog push
+          fi
