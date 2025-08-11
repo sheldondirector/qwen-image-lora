@@ -1,28 +1,6 @@
-# cog.yaml
-# Minimal, reliable setup for a Diffusers + LoRA image generator
-
 build:
   gpu: true
-  cuda: "12.1"
   python_version: "3.10"
+  python_requirements: requirements.txt
 
-  system_packages:
-    - git
-    - ffmpeg
-    - libgl1
-    - libglib2.0-0
-
-  run:
-    - pip install --upgrade pip
-    # PyTorch + torchvision with CUDA 12.1 wheels
-    - pip install --extra-index-url https://download.pytorch.org/whl/cu121 torch==2.8.0 torchvision==0.23.0
-    # Diffusers (latest main), plus the usual helpers
-    - pip install git+https://github.com/huggingface/diffusers
-    - pip install transformers==4.55.0 accelerate==1.10.0 safetensors pillow huggingface_hub
-
-# Expose your predictor class
 predict: "predict.py:Predictor"
-
-# Optional environment defaults
-environment:
-  BASE_MODEL_ID: "runwayml/stable-diffusion-v1-5"

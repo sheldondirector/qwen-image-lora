@@ -1,6 +1,13 @@
-git+https://github.com/huggingface/diffusers
-transformers
-accelerate
-huggingface_hub
-safetensors
-requests
+--extra-index-url https://download.pytorch.org/whl/cu121
+torch==2.8.0+cu121
+torchvision==0.23.0+cu121
+
+# core libs
+transformers==4.55.0
+accelerate==1.10.0
+safetensors>=0.4.3
+Pillow>=10.3.0
+huggingface_hub>=0.23.0
+
+# if you’re pulling latest diffusers:
+git+https://github.com/huggingface/diffusers@main
