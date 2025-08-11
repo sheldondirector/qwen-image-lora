@@ -3,4 +3,8 @@ build:
   python_version: "3.10"
   python_requirements: requirements.txt
 
+# This lets you run `cog push` without repeating the image name.
+# It should match your Replicate registry slug.
+image: "r8.im/sheldondirector/qwen-image-lora"
+
 predict: "predict.py:Predictor"
