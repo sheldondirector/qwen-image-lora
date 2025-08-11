@@ -1,16 +1,28 @@
-# Build a GPU image and install deps
+# cog.yaml
+# Minimal, reliable setup for a Diffusers + LoRA image generator
+
 build:
-  gpu: true            # use Nvidia CUDA base image
+  gpu: true
+  cuda: "12.1"
   python_version: "3.10"
+
   system_packages:
-    - "git"            # needed for git+ installs
-  python_requirements: requirements.txt
-  # Ensure GPU PyTorch wheels are installed
+    - git
+    - ffmpeg
+    - libgl1
+    - libglib2.0-0
+
   run:
-    - pip install --upgrade --extra-index-url https://download.pytorch.org/whl/cu121 torch torchvision
+    - pip install --upgrade pip
+    # PyTorch + torchvision with CUDA 12.1 wheels
+    - pip install --extra-index-url https://download.pytorch.org/whl/cu121 torch==2.8.0 torchvision==0.23.0
+    # Diffusers (latest main), plus the usual helpers
+    - pip install git+https://github.com/huggingface/diffusers
+    - pip install transformers==4.55.0 accelerate==1.10.0 safetensors pillow huggingface_hub
 
-# Name of the image to push to Replicate's registry (r8.im)
-image: "r8.im/sheldondirector/qwen-image-lora"
-
-# Where Cog finds your predictor
+# Expose your predictor class
 predict: "predict.py:Predictor"
+
+# Optional environment defaults
+environment:
+  BASE_MODEL_ID: "runwayml/stable-diffusion-v1-5"

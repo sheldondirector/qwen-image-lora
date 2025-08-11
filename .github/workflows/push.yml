@@ -6,6 +6,7 @@ on:
 jobs:
   push:
     runs-on: ubuntu-latest
+
     steps:
       - name: Free disk space (optional but helpful)
         uses: jlumbroso/free-disk-space@v1.3.1
@@ -13,7 +14,7 @@ jobs:
           tool-cache: false
           docker-images: false
 
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Cog
@@ -21,5 +22,5 @@ jobs:
         with:
           token: ${{ secrets.REPLICATE_CLI_AUTH_TOKEN }}
 
-      - name: Push to Replicate
+      - name: Push model to Replicate
         run: cog push r8.im/sheldondirector/qwen-image-lora
